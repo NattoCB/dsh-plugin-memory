@@ -1,0 +1,27 @@
+# DSH bundle patch for the 5-layer memory plugin.
+# Registers the `memory` service with its full config: entry injection,
+# relevance retrieval, idle-time LLM auto-extraction (routed through
+# the configured LLM route), and the memory_* agent tools.
+#
+# Layering note: this file is loaded by the profile loader because
+# package.json declares `dsh.bundle.patch: ./cordis.patch.yml` and the
+# package is listed in the profile's `dsh.profile.bundles`. The profile's
+# own cordis.patch.yml no longer inserts `memory` (that would double-register
+# the same service id).
+
+- insert:
+    - id: memory
+      name: '@deepseek-ai/dsh-plugin-memory'
+      config:
+        enableEntryInjection: true
+        enableRelevance: true
+        enableExtraction: true
+        maxRelevant: 5
+        relevanceTopK: 8
+        relevanceBudgetChars: 2000
+        extractionDebounceMs: 60000
+        extractionLookback: 40
+        llm:
+          provider: ""
+          model: ""
+          maxTokens: 1024

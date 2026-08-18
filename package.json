@@ -25,6 +25,11 @@
     "README.i18n.yaml"
   ],
   "license": "MIT",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
   "dependencies": {
     "@deepseek-ai/schemastery": "^3.18.1"
   },
