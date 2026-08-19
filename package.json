@@ -25,6 +25,17 @@
     "README.i18n.yaml"
   ],
   "license": "MIT",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "memory",
+    "agent-memory",
+    "plugin"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
