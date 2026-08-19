@@ -4,6 +4,12 @@
 
 为 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（DSH）设计的**持久化五层记忆系统**插件，实现一套五层记忆设计。
 
+## 安装
+
+```bash
+dsh plugin --profile web add github:NattoCB/dsh-plugin-memory
+```
+
 ## 它能做什么
 
 | 层级 | 位置 | 作用 |
