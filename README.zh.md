@@ -2,13 +2,15 @@
 
 [English](README.md) | 中文
 
-为 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（DSH）设计的**持久化五层记忆系统**插件，实现一套五层记忆设计。
+> **别再每次从零开始。** 给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（DSH）的 agent 一套**五层持久记忆**——画像、项目上下文、每日日志、可召回主题——让它记住的是「你」，而不只是「这一次会话」。
 
-## 安装
+## 问题
 
-```bash
-dsh plugin --profile web add github:NattoCB/dsh-plugin-memory
-```
+没有记忆的 agent 是个才华横溢的陌生人：每次新会话都要重新认识你是谁、在做什么、上周决定了什么。靠 prompt 塞背景、手写笔记都不可扩展——上下文膨胀、内容过期、永远没人清理。
+
+## 洞察
+
+记忆不是一个大桶，而是**寿命与归属各不相同的五层**——从用户自己维护的身份文件（L0）到按天追加、永不合并的日志（L3）。每层有独立的写入路径、截断预算与注入规则：冷启动上下文保持廉价，长期事实真正累积。
 
 ## 它能做什么
 
@@ -29,7 +31,15 @@ dsh plugin --profile web add github:NattoCB/dsh-plugin-memory
 5. **画像轮替（L1）。** `memory_profile` 把新事实合并进四个小节并递增版本号，旧版存 `.bak`。
 6. **Agent 工具。** 六个可由模型调用的工具，让 agent 直接保存、召回、检索、遗忘记忆。
 
-## 架构
+## 快速开始
+
+```bash
+dsh plugin --profile web add github:NattoCB/dsh-plugin-memory
+```
+
+重启 `dsh web` 后，插件在首次使用时自动初始化 `~/.dsh/memory/` 与 `<cwd>/.dsh/memory/`。未配置 `llm` 路由时，插件依然提供索引 + 主题、入口注入、关键词相关性、agent 工具与画像轮替 —— 仅 LLM 自动提取与 LLM 相关性排序被关闭。
+
+## 工作原理
 
 插件注册在两条 cordis 接口上，与官方插件（`dsh-time-context`、`dsh-tool-todo`）一致：
 
@@ -69,8 +79,6 @@ src/
       maxTokens: 1024
 ```
 
-未配置 `llm` 路由时，插件依然提供索引 + 主题、入口注入、关键词相关性、agent 工具与画像轮替 —— 仅 LLM 自动提取与 LLM 相关性排序被关闭。
-
 ## agent 可调用工具
 
 | 工具 | 范围 | 效果 |
@@ -96,6 +104,10 @@ src/
   <topic>.md       # 项目主题文件
 ```
 
+## 背后的故事
+
+本插件源自上一代 harness（WorkBuddy）的记忆模型：用户级画像、项目级语义记忆、每日日志——外加一条「机制优于意愿」（P0）的决策内核。DSH 原本完全没有这些，所以每次会话都从零开始。本插件把验证过的设计移植到 DSH 的插件接口上，并补齐让它真正可用的部分（相关性注入、截断预算、空闲自动提取）。
+
 ## 与参考规格的差异
 
 - **无 `<uid>` 层。** DSH 只有一个用户；画像即 `~/.dsh/memory/profile.md`，而非 `<uid>_memory.md`。
@@ -106,3 +118,7 @@ src/
 ## 许可证
 
 MIT。
+
+---
+
+**试试看：** 一行安装、重启，然后告诉你的 agent 一句值得记住的话——隔一个会话再查 `~/.dsh/memory/`。发现模型有缺口？[提 issue](https://github.com/NattoCB/dsh-plugin-memory/issues) 或发 PR。

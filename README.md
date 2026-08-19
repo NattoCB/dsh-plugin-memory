@@ -2,13 +2,15 @@
 
 English | [中文](README.zh.md)
 
-A persistent **5-layer memory system** for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH), implementing a five-layer memory design.
+> **Stop starting every session from zero.** Give your [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH) agent a persistent **five-layer memory** — profile, project context, daily log, and recallable topics — so it remembers you between sessions, not just inside one.
 
-## Install
+## The problem
 
-```bash
-dsh plugin --profile web add github:NattoCB/dsh-plugin-memory
-```
+An agent without memory is a brilliant stranger: every new session it re-learns who you are, what you are working on, and what you decided last week. Prompt stuffing and hand-written notes do not scale — they bloat context, drift out of date, and never get cleaned up.
+
+## The insight
+
+Memory is not one bucket, it is **five layers with different lifetimes and owners** — from a user-owned identity file (L0) down to per-day append-only logs (L3). Each layer gets its own write path, truncation budget, and injection rule, so cold-start context stays cheap while long-term facts actually accumulate.
 
 ## What it does
 
@@ -29,7 +31,15 @@ Six mechanisms, in priority order from the spec:
 5. **Profile rotation (L1).** `memory_profile` merges new facts into the four sections and rotates the version, keeping `.bak`.
 6. **Agent tools.** Six model-callable tools let the agent save, recall, search, and forget memories directly.
 
-## Architecture
+## Quick start
+
+```bash
+dsh plugin --profile web add github:NattoCB/dsh-plugin-memory
+```
+
+Restart `dsh web`, and the plugin bootstraps `~/.dsh/memory/` and `<cwd>/.dsh/memory/` on first use. No `llm` route? The plugin still provides index+topics, entry injection, keyword relevance, the agent tools, and profile rotation — only LLM-based extraction and LLM relevance ranking are disabled.
+
+## How it works
 
 The plugin registers on two cordis seams, mirroring first-party plugins (`dsh-time-context`, `dsh-tool-todo`):
 
@@ -69,8 +79,6 @@ Deploy via a DSH plugin entry (see `package.json` `exports`):
       maxTokens: 1024
 ```
 
-Without an `llm` route, the plugin still provides index+topics, entry injection, keyword relevance, the agent tools, and profile rotation — only LLM-based extraction and LLM relevance ranking are disabled.
-
 ## Tools the agent can call
 
 | Tool | Scope | Effect |
@@ -96,6 +104,10 @@ Without an `llm` route, the plugin still provides index+topics, entry injection,
   <topic>.md       # project topic files
 ```
 
+## The story
+
+This plugin grew out of the memory model of an older harness (WorkBuddy): a user-level profile, project-level semantic memory, and daily logs — plus a decision kernel that says *mechanism beats willpower* (P0). DSH had none of it, so sessions kept starting from zero. This plugin ports that proven design to DSH's plugin seams and adds the missing pieces (relevance injection, truncation budgets, idle auto-extraction) that make it actually usable.
+
 ## Differences from the reference spec
 
 - **No `<uid>` layer.** DSH has one user; the profile is `~/.dsh/memory/profile.md`, not `<uid>_memory.md`.
@@ -106,3 +118,7 @@ Without an `llm` route, the plugin still provides index+topics, entry injection,
 ## License
 
 MIT.
+
+---
+
+**Try it:** install with one line, restart, and tell your agent something worth remembering — then check `~/.dsh/memory/` a session later. Found a gap in the model? [Open an issue](https://github.com/NattoCB/dsh-plugin-memory/issues) or send a PR.
