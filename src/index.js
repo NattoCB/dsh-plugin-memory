@@ -98,13 +98,40 @@ function extractLastUserQuery(messages) {
 	return undefined;
 }
 
-/** Build a plugin-owned message source for a memory sub-channel. */
+/**
+ * Human-readable layer labels for the two memory injection channels.
+ *
+ * The GUI collapsed row shows only the plugin label (`memory`) for every
+ * plugin-sourced message, so both injections used to read identically as
+ * "context injection · memory" and looked like a duplicate. `form: "notice"`
+ * makes the collapsed row also show the one-line `summary` below, so the two
+ * layers are distinguishable without expanding.
+ */
+const CHANNEL_LAYERS = {
+	entry: {
+		summary: "基础层 boot-entry：记忆系统指令 + L0/L2 索引，每会话注入一次",
+		section: "memory-entry · 基础层（会话启动注入一次）",
+	},
+	relevance: {
+		summary: "检索层 relevance：与当前请求相关的记忆条目，按需注入",
+		section: "memory-relevance · 检索层（按需注入）",
+	},
+};
+
+/**
+ * Build a plugin-owned message source for a memory sub-channel.
+ *
+ * The summary rides the GUI's collapsed context row (notice form); the section
+ * name labels the expanded body.
+ */
 function pluginSource(channel, text) {
+	const layer = CHANNEL_LAYERS[channel];
 	return {
 		kind: "plugin",
 		plugin: name,
-		form: "snapshot",
-		sections: [{ name: `memory-${channel}`, text }],
+		form: "notice",
+		summary: layer.summary,
+		sections: [{ name: layer.section, text }],
 	};
 }
 
@@ -651,4 +678,4 @@ async function removeIndexLine(store, topic) {
 	await store.write("MEMORY.md", kept.join("\n"));
 }
 
-export { Config, apply, inject, name };
+export { Config, apply, inject, name, pluginSource };

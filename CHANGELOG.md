@@ -6,6 +6,7 @@ All notable changes to this plugin are documented in this file.
 
 - Declare the `dsh.bundle.patch` manifest in `package.json` with a dedicated `cordis.patch.yml` so the plugin loads as a profile bundle.
 - Fix profile section rendering: `write()` now emits `## <section>` headings so the next `read()` parses the bullets back instead of losing them.
+- Label the two injection channels by layer: message sources now use the `notice` form with a one-line summary, so the GUI collapsed rows read "基础层 boot-entry…" vs "检索层 relevance…" instead of two identical "注入 memory" rows.
 
 ## [0.1.0-rc.1] - 2026-08-17
 

@@ -7,6 +7,7 @@ import {
 	keywordScore,
 	fitIndexLines,
 } from "../src/inject.js";
+import { pluginSource } from "../src/index.js";
 import { ENTRY_INDEX_MAX_LINE_CHARS } from "../src/store.js";
 
 test("buildEntryInstruction renders the empty-index placeholders", () => {
@@ -31,6 +32,22 @@ test("buildRelevanceReminder frames hits and escapes the body", () => {
 	assert.match(md, /<system-reminder data-role="memory">/);
 	assert.match(md, /example-topic\.md \(age: 1d\)/);
 	assert.match(md, /buffer &lt;design&gt;/);
+});
+
+test("pluginSource labels each injection channel as a distinct layer", () => {
+	const entry = pluginSource("entry", "ENTRY");
+	const relevance = pluginSource("relevance", "RELEVANCE");
+	for (const source of [entry, relevance]) {
+		assert.equal(source.kind, "plugin");
+		assert.equal(source.plugin, "memory");
+		assert.equal(source.form, "notice");
+		assert.equal(source.sections.length, 1);
+		assert.equal(source.sections[0].text, source === entry ? "ENTRY" : "RELEVANCE");
+	}
+	assert.match(entry.summary, /基础层/);
+	assert.match(relevance.summary, /检索层/);
+	assert.notEqual(entry.summary, relevance.summary);
+	assert.notEqual(entry.sections[0].name, relevance.sections[0].name);
 });
 
 test("keywordScore counts case-insensitive term overlaps", () => {
