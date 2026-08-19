@@ -4,6 +4,12 @@ English | [中文](README.zh.md)
 
 A persistent **5-layer memory system** for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH), implementing a five-layer memory design.
 
+## Install
+
+```bash
+dsh plugin --profile web add github:NattoCB/dsh-plugin-memory
+```
+
 ## What it does
 
 | Layer | Where | Purpose |
