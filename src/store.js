@@ -230,7 +230,7 @@ export class ProfileMemory {
 		const head = `# User Memory Profile\n> Last updated: ${stamp}\n> Version: ${version}\n\n## Memory Block\n`;
 		const body = ProfileMemory.SECTIONS.map((name) => {
 			const items = (sections[name] ?? []).map((l) => `- ${l}`).join("\n");
-			return `**${name}**\n${items || "(empty)"}`;
+			return `## ${name}\n${items || "(empty)"}`;
 		}).join("\n\n");
 		return head + body + "\n";
 	}
