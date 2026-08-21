@@ -12,6 +12,7 @@
   <img alt="画像轮替" src="https://img.shields.io/badge/-画像轮替-4d6bfe" />
   <img alt="截断预算" src="https://img.shields.io/badge/-截断预算-4d6bfe" />
   <img alt="Agent 工具" src="https://img.shields.io/badge/-6%20个%20Agent%20工具-4d6bfe" /><br /><br />
+  <a href="https://awesome-dsh-plugin.com"><img src="https://awesome-dsh-plugin.com/badge.svg" alt="awesome · DSH 插件" /></a><br /><br />
   <b>两条 cordis 接入面</b> —— <code>agent/pre-step</code> 注入 + <code>ctx.tools.register</code>（六个工具）
 </div>
 

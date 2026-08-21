@@ -12,6 +12,7 @@ English | [中文](README.zh.md)
   <img alt="Profile Rotation" src="https://img.shields.io/badge/-Profile%20Rotation-4d6bfe" />
   <img alt="Truncation Budget" src="https://img.shields.io/badge/-Truncation%20Budget-4d6bfe" />
   <img alt="Agent Tools" src="https://img.shields.io/badge/-6%20Agent%20Tools-4d6bfe" /><br /><br />
+  <a href="https://awesome-dsh-plugin.com"><img src="https://awesome-dsh-plugin.com/badge.svg" alt="awesome · DSH 插件" /></a><br /><br />
   <b>Two cordis seams</b> — <code>agent/pre-step</code> injection + <code>ctx.tools.register</code> (six tools)
 </div>
 
